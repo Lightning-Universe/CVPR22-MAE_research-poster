@@ -14,6 +14,7 @@ from functools import partial
 import torch
 import torch.nn as nn
 from timm.models.vision_transformer import Block, PatchEmbed
+
 from fb_mae.util.pos_embed import get_2d_sincos_pos_embed
 
 
@@ -48,10 +49,7 @@ class MaskedAutoencoderViT(nn.Module):
         )  # fixed sin-cos embedding
 
         self.blocks = nn.ModuleList(
-            [
-                Block(embed_dim, num_heads, mlp_ratio, qkv_bias=True, norm_layer=norm_layer)
-                for i in range(depth)
-            ]
+            [Block(embed_dim, num_heads, mlp_ratio, qkv_bias=True, norm_layer=norm_layer) for i in range(depth)]
         )
         self.norm = norm_layer(embed_dim)
         # --------------------------------------------------------------------------
@@ -68,9 +66,7 @@ class MaskedAutoencoderViT(nn.Module):
 
         self.decoder_blocks = nn.ModuleList(
             [
-                Block(
-                    decoder_embed_dim, decoder_num_heads, mlp_ratio, qkv_bias=True, norm_layer=norm_layer
-                )
+                Block(decoder_embed_dim, decoder_num_heads, mlp_ratio, qkv_bias=True, norm_layer=norm_layer)
                 for i in range(decoder_depth)
             ]
         )

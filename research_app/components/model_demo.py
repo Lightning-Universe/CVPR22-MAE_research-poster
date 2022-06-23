@@ -1,8 +1,8 @@
 import logging
 
 import gradio as gr
-from PIL import Image
 from lightning.app.components.serve import ServeGradio
+from PIL import Image
 from rich.logging import RichHandler
 
 from research_app.mae_demo import Demo
@@ -21,7 +21,12 @@ class ModelDemo(ServeGradio):
     """
 
     inputs = gr.inputs.Image(type="pil")
-    outputs = gr.outputs.Image()
+    outputs = [
+        gr.outputs.Image(label="original image"),
+        gr.outputs.Image(label="masked"),
+        gr.outputs.Image(label="reconstructed"),
+        gr.outputs.Image(label="reconstructed + visible"),
+    ]
 
     # enable_queue = True
 
@@ -35,4 +40,5 @@ class ModelDemo(ServeGradio):
         return model
 
     def predict(self, image: Image.Image) -> Image.Image:
-        return self.model.predict(image)["visible"]
+        result = self.model.predict(image)
+        return result["original"], result["masked"], result["reconstructed"], result["visible"]

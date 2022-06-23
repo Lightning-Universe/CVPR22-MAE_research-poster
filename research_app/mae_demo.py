@@ -28,7 +28,7 @@ def show_image(image, title=""):
     # image is [H, W, 3]
     assert image.shape[2] == 3
     image = torch.clip((image * imagenet_std + imagenet_mean) * 255, 0, 255).int().numpy()
-    image = Image.fromarray(image.astype('uint8'))
+    image = Image.fromarray(image.astype("uint8"))
     return image
 
 
@@ -68,10 +68,7 @@ def run_one_image(img, model):
 
     visible_image = show_image(im_paste[0], "reconstruction + visible")
 
-    return {"original": original_image,
-            "masked": masked_image,
-            "reconstructed": recons_image,
-            "visible": visible_image}
+    return {"original": original_image, "masked": masked_image, "reconstructed": recons_image, "visible": visible_image}
 
 
 class Demo:
