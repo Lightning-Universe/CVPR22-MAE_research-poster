@@ -1,8 +1,7 @@
-# ⚡️ Lightning Research Poster Template 🔬
+# ⚡️ Masked Autoencoders CVPR-22 Research Poster 🔬
 
-Use this app to share your research paper results. This app lets you connect a blogpost, arxiv paper, and a jupyter
-notebook and even have an interactive demo for people to play with the model. This app also allows industry
-practitioners to reproduce your work.
+This app is a research poster demo of Masked Autoencoders model by Facebook Research. It showcases a notebook, and
+a model demo where you can upload photos to get visualization of image reconstruction.
 
 ## Getting started
 
