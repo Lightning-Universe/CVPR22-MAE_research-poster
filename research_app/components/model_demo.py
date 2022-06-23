@@ -28,7 +28,7 @@ class ModelDemo(ServeGradio):
         gr.outputs.Image(label="reconstructed + visible"),
     ]
 
-    # enable_queue = True
+    enable_queue = True
 
     def __init__(self):
         super().__init__(parallel=True)

@@ -1,6 +1,6 @@
 <div style="height: 90pt;"></div>
 <div style="flex: 0 0 16%; margin-top: -10pt;">
-<img src="https://cdn.iconscout.com/icon/free/png-256/openai-1524384-1290687.png" width="100px">
+<img src="https://avatars.githubusercontent.com/u/58386951?s=200&v=4" width="100px">
 </div>
 <div style="flex: 0 0 65%; text-align: center;">
 <h1 style="margin-bottom: 10pt;">Demo: Masked Autoencoders</h1>
