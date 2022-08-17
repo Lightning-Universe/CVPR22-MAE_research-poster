@@ -21,10 +21,8 @@ import torch.distributed as dist
 from torch._six import inf
 
 
-class SmoothedValue(object):
-    """Track a series of values and provide access to smoothed values over a
-    window or the global series average.
-    """
+class SmoothedValue:
+    """Track a series of values and provide access to smoothed values over a window or the global series average."""
 
     def __init__(self, window_size=20, fmt=None):
         if fmt is None:
@@ -76,11 +74,15 @@ class SmoothedValue(object):
 
     def __str__(self):
         return self.fmt.format(
-            median=self.median, avg=self.avg, global_avg=self.global_avg, max=self.max, value=self.value
+            median=self.median,
+            avg=self.avg,
+            global_avg=self.global_avg,
+            max=self.max,
+            value=self.value,
         )
 
 
-class MetricLogger(object):
+class MetricLogger:
     def __init__(self, delimiter="\t"):
         self.meters = defaultdict(SmoothedValue)
         self.delimiter = delimiter
@@ -99,12 +101,14 @@ class MetricLogger(object):
             return self.meters[attr]
         if attr in self.__dict__:
             return self.__dict__[attr]
-        raise AttributeError("'{}' object has no attribute '{}'".format(type(self).__name__, attr))
+        raise AttributeError(
+            f"'{type(self).__name__}' object has no attribute '{attr}'"
+        )
 
     def __str__(self):
         loss_str = []
         for name, meter in self.meters.items():
-            loss_str.append("{}: {}".format(name, str(meter)))
+            loss_str.append(f"{name}: {str(meter)}")
         return self.delimiter.join(loss_str)
 
     def synchronize_between_processes(self):
@@ -123,7 +127,14 @@ class MetricLogger(object):
         iter_time = SmoothedValue(fmt="{avg:.4f}")
         data_time = SmoothedValue(fmt="{avg:.4f}")
         space_fmt = ":" + str(len(str(len(iterable)))) + "d"
-        log_msg = [header, "[{0" + space_fmt + "}/{1}]", "eta: {eta}", "{meters}", "time: {time}", "data: {data}"]
+        log_msg = [
+            header,
+            "[{0" + space_fmt + "}/{1}]",
+            "eta: {eta}",
+            "{meters}",
+            "time: {time}",
+            "data: {data}",
+        ]
         if torch.cuda.is_available():
             log_msg.append("max mem: {memory:.0f}")
         log_msg = self.delimiter.join(log_msg)
@@ -150,20 +161,25 @@ class MetricLogger(object):
                 else:
                     print(
                         log_msg.format(
-                            i, len(iterable), eta=eta_string, meters=str(self), time=str(iter_time), data=str(data_time)
+                            i,
+                            len(iterable),
+                            eta=eta_string,
+                            meters=str(self),
+                            time=str(iter_time),
+                            data=str(data_time),
                         )
                     )
             i += 1
             end = time.time()
         total_time = time.time() - start_time
         total_time_str = str(datetime.timedelta(seconds=int(total_time)))
-        print("{} Total time: {} ({:.4f} s / it)".format(header, total_time_str, total_time / len(iterable)))
+        print(
+            f"{header} Total time: {total_time_str} ({total_time / len(iterable):.4f} s / it)"
+        )
 
 
 def setup_for_distributed(is_master):
-    """
-    This function disables printing when not in master process
-    """
+    """This function disables printing when not in master process."""
     builtin_print = builtins.print
 
     def print(*args, **kwargs):
@@ -171,7 +187,7 @@ def setup_for_distributed(is_master):
         force = force or (get_world_size() > 8)
         if is_master or force:
             now = datetime.datetime.now().time()
-            builtin_print("[{}] ".format(now), end="")  # print with time stamp
+            builtin_print(f"[{now}] ", end="")  # print with time stamp
             builtin_print(*args, **kwargs)
 
     builtins.print = print
@@ -211,7 +227,9 @@ def init_distributed_mode(args):
         args.rank = int(os.environ["OMPI_COMM_WORLD_RANK"])
         args.world_size = int(os.environ["OMPI_COMM_WORLD_SIZE"])
         args.gpu = int(os.environ["OMPI_COMM_WORLD_LOCAL_RANK"])
-        args.dist_url = "tcp://%s:%s" % (os.environ["MASTER_ADDR"], os.environ["MASTER_PORT"])
+        args.dist_url = "tcp://{}:{}".format(
+            os.environ["MASTER_ADDR"], os.environ["MASTER_PORT"]
+        )
         os.environ["LOCAL_RANK"] = str(args.gpu)
         os.environ["RANK"] = str(args.rank)
         os.environ["WORLD_SIZE"] = str(args.world_size)
@@ -233,9 +251,15 @@ def init_distributed_mode(args):
 
     torch.cuda.set_device(args.gpu)
     args.dist_backend = "nccl"
-    print("| distributed init (rank {}): {}, gpu {}".format(args.rank, args.dist_url, args.gpu), flush=True)
+    print(
+        f"| distributed init (rank {args.rank}): {args.dist_url}, gpu {args.gpu}",
+        flush=True,
+    )
     torch.distributed.init_process_group(
-        backend=args.dist_backend, init_method=args.dist_url, world_size=args.world_size, rank=args.rank
+        backend=args.dist_backend,
+        init_method=args.dist_url,
+        world_size=args.world_size,
+        rank=args.rank,
     )
     torch.distributed.barrier()
     setup_for_distributed(args.rank == 0)
@@ -247,12 +271,22 @@ class NativeScalerWithGradNormCount:
     def __init__(self):
         self._scaler = torch.cuda.amp.GradScaler()
 
-    def __call__(self, loss, optimizer, clip_grad=None, parameters=None, create_graph=False, update_grad=True):
+    def __call__(
+        self,
+        loss,
+        optimizer,
+        clip_grad=None,
+        parameters=None,
+        create_graph=False,
+        update_grad=True,
+    ):
         self._scaler.scale(loss).backward(create_graph=create_graph)
         if update_grad:
             if clip_grad is not None:
                 assert parameters is not None
-                self._scaler.unscale_(optimizer)  # unscale the gradients of optimizer's assigned params in-place
+                self._scaler.unscale_(
+                    optimizer
+                )  # unscale the gradients of optimizer's assigned params in-place
                 norm = torch.nn.utils.clip_grad_norm_(parameters, clip_grad)
             else:
                 self._scaler.unscale_(optimizer)
@@ -282,7 +316,10 @@ def get_grad_norm_(parameters, norm_type: float = 2.0) -> torch.Tensor:
         total_norm = max(p.grad.detach().abs().max().to(device) for p in parameters)
     else:
         total_norm = torch.norm(
-            torch.stack([torch.norm(p.grad.detach(), norm_type).to(device) for p in parameters]), norm_type
+            torch.stack(
+                [torch.norm(p.grad.detach(), norm_type).to(device) for p in parameters]
+            ),
+            norm_type,
         )
     return total_norm
 
@@ -304,18 +341,28 @@ def save_model(args, epoch, model, model_without_ddp, optimizer, loss_scaler):
             save_on_master(to_save, checkpoint_path)
     else:
         client_state = {"epoch": epoch}
-        model.save_checkpoint(save_dir=args.output_dir, tag="checkpoint-%s" % epoch_name, client_state=client_state)
+        model.save_checkpoint(
+            save_dir=args.output_dir,
+            tag="checkpoint-%s" % epoch_name,
+            client_state=client_state,
+        )
 
 
 def load_model(args, model_without_ddp, optimizer, loss_scaler):
     if args.resume:
         if args.resume.startswith("https"):
-            checkpoint = torch.hub.load_state_dict_from_url(args.resume, map_location="cpu", check_hash=True)
+            checkpoint = torch.hub.load_state_dict_from_url(
+                args.resume, map_location="cpu", check_hash=True
+            )
         else:
             checkpoint = torch.load(args.resume, map_location="cpu")
         model_without_ddp.load_state_dict(checkpoint["model"])
         print("Resume checkpoint %s" % args.resume)
-        if "optimizer" in checkpoint and "epoch" in checkpoint and not (hasattr(args, "eval") and args.eval):
+        if (
+            "optimizer" in checkpoint
+            and "epoch" in checkpoint
+            and not (hasattr(args, "eval") and args.eval)
+        ):
             optimizer.load_state_dict(checkpoint["optimizer"])
             args.start_epoch = checkpoint["epoch"] + 1
             if "scaler" in checkpoint:
