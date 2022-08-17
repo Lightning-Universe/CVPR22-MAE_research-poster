@@ -172,7 +172,9 @@ def validate_app_functionalities(app_page: "Page") -> None:
         try:
             app_page.reload()
             sleep(5)
-            app_label = app_page.frame_locator("iframe").locator("text='A demo of Masked Autoencoders research paper using Lightning App'")
+            app_label = app_page.frame_locator("iframe").locator(
+                "text='A demo of Masked Autoencoders research paper using Lightning App'"
+            )
             app_label.wait_for(timeout=30 * 1000)
             break
         except (
