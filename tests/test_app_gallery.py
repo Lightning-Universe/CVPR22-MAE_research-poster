@@ -21,7 +21,9 @@ if _is_playwright_available():
 @contextmanager
 def get_gallery_app_page(app_name) -> Generator:
     with sync_playwright() as p:
-        browser = p.chromium.launch(timeout=5000, headless=bool(int(os.getenv("HEADLESS", "0"))))
+        browser = p.chromium.launch(
+            timeout=5000, headless=bool(int(os.getenv("HEADLESS", "0")))
+        )
         payload = {
             "apiKey": Config.api_key,
             "username": Config.username,
@@ -170,7 +172,9 @@ def validate_app_functionalities(app_page: "Page") -> None:
         try:
             app_page.reload()
             sleep(5)
-            app_label = app_page.frame_locator("iframe").locator("text=Masked Autoencoders")
+            app_label = app_page.frame_locator("iframe").locator(
+                "text=Masked Autoencoders"
+            )
             app_label.wait_for(timeout=30 * 1000)
             break
         except (
@@ -196,6 +200,7 @@ def test_launch_app_from_gallery():
     with get_gallery_app_page(app_name) as gallery_page:
         with launch_from_gallery_app_page(gallery_page) as app_page:
             validate_app_functionalities(app_page)
+
 
 @pytest.mark.skipif(
     not os.getenv("TEST_APP_NAME", None), reason="requires TEST_APP_NAME env var"

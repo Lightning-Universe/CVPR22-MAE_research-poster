@@ -27,7 +27,9 @@ def prepare_model(chkpt_dir, arch="mae_vit_large_patch16"):
 def show_image(image, title=""):
     # image is [H, W, 3]
     assert image.shape[2] == 3
-    image = torch.clip((image * imagenet_std + imagenet_mean) * 255, 0, 255).int().numpy()
+    image = (
+        torch.clip((image * imagenet_std + imagenet_mean) * 255, 0, 255).int().numpy()
+    )
     image = Image.fromarray(image.astype("uint8"))
     return image
 
@@ -46,7 +48,9 @@ def run_one_image(img, model):
 
     # visualize the mask
     mask = mask.detach()
-    mask = mask.unsqueeze(-1).repeat(1, 1, model.patch_embed.patch_size[0] ** 2 * 3)  # (N, H*W, p*p*3)
+    mask = mask.unsqueeze(-1).repeat(
+        1, 1, model.patch_embed.patch_size[0] ** 2 * 3
+    )  # (N, H*W, p*p*3)
     mask = model.unpatchify(mask)  # 1 is removing, 0 is keeping
     mask = torch.einsum("nchw->nhwc", mask).detach().cpu()
 
@@ -68,7 +72,12 @@ def run_one_image(img, model):
 
     visible_image = show_image(im_paste[0], "reconstruction + visible")
 
-    return {"original": original_image, "masked": masked_image, "reconstructed": recons_image, "visible": visible_image}
+    return {
+        "original": original_image,
+        "masked": masked_image,
+        "reconstructed": recons_image,
+        "visible": visible_image,
+    }
 
 
 class Demo:

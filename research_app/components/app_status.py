@@ -9,7 +9,9 @@ from rich.logging import RichHandler
 from streamlit_autorefresh import st_autorefresh
 
 FORMAT = "%(message)s"
-logging.basicConfig(level="NOTSET", format=FORMAT, datefmt="[%X]", handlers=[RichHandler()])
+logging.basicConfig(
+    level="NOTSET", format=FORMAT, datefmt="[%X]", handlers=[RichHandler()]
+)
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +52,9 @@ def render(state: AppState):
 
     if not state.close:
         st.title("App status")
-        st.write("Some components of this app is not ready yet! Please wait for sometime...")
+        st.write(
+            "Some components of this app is not ready yet! Please wait for sometime..."
+        )
 
         md = ""
         for name, ready in state.components.item():
