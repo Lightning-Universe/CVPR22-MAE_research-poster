@@ -31,6 +31,8 @@ class JupyterLab(L.LightningWork):
                 ' "Access-Control-Allow-Origin": "http://0.0.0.0"}}'
             )
 
-        cmd = f"jupyter-lab --allow-root --no-browser --ip={self.host} --port={self.port} " \
-              f"--NotebookApp.token='' --NotebookApp.password=''"
+        cmd = (
+            f"jupyter-lab --allow-root --no-browser --ip={self.host} --port={self.port} "
+            f"--NotebookApp.token='' --NotebookApp.password=''"
+        )
         subprocess.run(cmd, shell=True)
