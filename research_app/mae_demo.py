@@ -105,7 +105,7 @@ class Demo:
         img = img - imagenet_mean
         img = img / imagenet_std
 
-        original_image = show_image(torch.tensor(img))
+        _ = show_image(torch.tensor(img))
 
         # make random mask reproducible (comment out to make it change)
         torch.manual_seed(2)
@@ -114,8 +114,13 @@ class Demo:
 
 
 if __name__ == "__main__":
-    img_url = "https://user-images.githubusercontent.com/11435359/147738734-196fd92f-9260-48d5-ba7e-bf103d29364d.jpg"  # fox, from ILSVRC2012_val_00046145
-    # img_url = 'https://user-images.githubusercontent.com/11435359/147743081-0428eecf-89e5-4e07-8da5-a30fd73cc0ba.jpg' # cucumber, from ILSVRC2012_val_00047851
+
+    # fox, from ILSVRC2012_val_00046145
+    img_url = "https://user-images.githubusercontent.com/11435359/147738734-196fd92f-9260-48d5-ba7e-bf103d29364d.jpg"
+
+    # cucumber, from ILSVRC2012_val_00047851
+    # img_url = 'https://user-images.githubusercontent.com/11435359/147743081-0428eecf-89e5-4e07-8da5-a30fd73cc0ba.jpg'
+
     img = Image.open(requests.get(img_url, stream=True).raw)
     model = Demo()
     model.predict(img)
