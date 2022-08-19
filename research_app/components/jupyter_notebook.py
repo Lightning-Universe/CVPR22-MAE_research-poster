@@ -13,7 +13,9 @@ class JupyterLab(L.LightningWork):
         super().__init__(parallel=True)
 
     def run(self):
-        jupyter_notebook_config_path = Path.home() / ".jupyter/jupyter_notebook_config.py"
+        jupyter_notebook_config_path = (
+            Path.home() / ".jupyter/jupyter_notebook_config.py"
+        )
         try:
             os.remove(jupyter_notebook_config_path)
         except FileNotFoundError:
@@ -29,5 +31,8 @@ class JupyterLab(L.LightningWork):
                 ' "Access-Control-Allow-Origin": "http://0.0.0.0"}}'
             )
 
-        cmd = f"jupyter-lab --allow-root --no-browser --ip={self.host} --port={self.port} --NotebookApp.token='' --NotebookApp.password=''"  # noqa: E501
+        cmd = (
+            f"jupyter-lab --allow-root --no-browser --ip={self.host} --port={self.port} "
+            f"--NotebookApp.token='' --NotebookApp.password=''"
+        )
         subprocess.run(cmd, shell=True)
