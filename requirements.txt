@@ -12,4 +12,4 @@ nbconvert==7.2.9
 jupyterlite==0.1.0b7
 lightning==1.8.*
 jupyterlab==3.3.3
-timm==0.5.4
+timm==0.6.12
