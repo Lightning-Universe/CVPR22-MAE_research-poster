@@ -34,9 +34,7 @@ if _is_playwright_available():
 @contextmanager
 def get_gallery_app_page(app_name) -> Generator:
     with sync_playwright() as p:
-        browser = p.chromium.launch(
-            timeout=5000, headless=bool(int(os.getenv("HEADLESS", "0")))
-        )
+        browser = p.chromium.launch(timeout=5000, headless=bool(int(os.getenv("HEADLESS", "0"))))
         payload = {
             "apiKey": _Config.api_key,
             "username": _Config.username,
@@ -216,9 +214,7 @@ def validate_app_functionalities(app_page: "Page") -> None:
         tab_ui.wait_for(timeout=1000)
 
 
-@pytest.mark.skipif(
-    not os.getenv("TEST_APP_NAME", None), reason="requires TEST_APP_NAME env var"
-)
+@pytest.mark.skipif(not os.getenv("TEST_APP_NAME", None), reason="requires TEST_APP_NAME env var")
 def test_launch_app_from_gallery():
     app_name = os.getenv("TEST_APP_NAME", None)
     if app_name is None:
@@ -229,9 +225,7 @@ def test_launch_app_from_gallery():
             validate_app_functionalities(app_page)
 
 
-@pytest.mark.skipif(
-    not os.getenv("TEST_APP_NAME", None), reason="requires TEST_APP_NAME env var"
-)
+@pytest.mark.skipif(not os.getenv("TEST_APP_NAME", None), reason="requires TEST_APP_NAME env var")
 def test_clone_and_run_app_from_gallery():
     app_name = os.getenv("TEST_APP_NAME", None)
     if app_name is None:

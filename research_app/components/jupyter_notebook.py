@@ -13,9 +13,7 @@ class JupyterLab(L.LightningWork):
         super().__init__(parallel=True)
 
     def run(self):
-        jupyter_notebook_config_path = (
-            Path.home() / ".jupyter/jupyter_notebook_config.py"
-        )
+        jupyter_notebook_config_path = Path.home() / ".jupyter/jupyter_notebook_config.py"
         try:
             os.remove(jupyter_notebook_config_path)
         except FileNotFoundError:
