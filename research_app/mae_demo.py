@@ -114,7 +114,6 @@ class Demo:
 
 
 if __name__ == "__main__":
-
     # fox, from ILSVRC2012_val_00046145
     img_url = "https://user-images.githubusercontent.com/11435359/147738734-196fd92f-9260-48d5-ba7e-bf103d29364d.jpg"
 
