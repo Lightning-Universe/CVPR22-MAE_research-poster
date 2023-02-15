@@ -33,10 +33,10 @@ class ModelDemo(ServeGradio):
 
     inputs = gr.inputs.Image(type="pil")
     outputs = [
-        gr.outputs.Image(label="original image"),
-        gr.outputs.Image(label="masked"),
-        gr.outputs.Image(label="reconstructed"),
-        gr.outputs.Image(label="reconstructed + visible"),
+        gr.Image(label="original image"),
+        gr.Image(label="masked"),
+        gr.Image(label="reconstructed"),
+        gr.Image(label="reconstructed + visible"),
     ]
     examples = ["resources/fox.jpg", "resources/cucumber.jpg"]
     enable_queue = True
