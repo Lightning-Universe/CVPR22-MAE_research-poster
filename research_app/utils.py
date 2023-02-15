@@ -7,9 +7,7 @@ from pathlib import Path
 from rich.logging import RichHandler
 
 FORMAT = "%(message)s"
-logging.basicConfig(
-    level="NOTSET", format=FORMAT, datefmt="[%X]", handlers=[RichHandler()]
-)
+logging.basicConfig(level="NOTSET", format=FORMAT, datefmt="[%X]", handlers=[RichHandler()])
 
 logger = logging.getLogger(__name__)
 
@@ -17,9 +15,7 @@ logger = logging.getLogger(__name__)
 def notebook_to_html(path: str) -> str:
     """Provided notebook file path will be converted into html."""
     if not os.path.exists(path):
-        raise FileNotFoundError(
-            f"Can't convert notebook to html, path={path} not found!"
-        )
+        raise FileNotFoundError(f"Can't convert notebook to html, path={path} not found!")
 
     tempdir = tempfile.mkdtemp()
     command = f"jupyter nbconvert --to html {path} --output-dir='{tempdir}' --output index.html"
@@ -45,6 +41,4 @@ def clone_repo(url: str) -> str:
 
 
 if __name__ == "__main__":
-    clone_repo(
-        "https://github.com/PyTorchLightning/lightning-template-research-app.git"
-    )  # E501
+    clone_repo("https://github.com/PyTorchLightning/lightning-template-research-app.git")  # E501

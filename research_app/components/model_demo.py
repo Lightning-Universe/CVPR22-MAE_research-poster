@@ -9,9 +9,7 @@ from rich.logging import RichHandler
 from research_app.mae_demo import Demo
 
 FORMAT = "%(message)s"
-logging.basicConfig(
-    level="NOTSET", format=FORMAT, datefmt="[%X]", handlers=[RichHandler()]
-)
+logging.basicConfig(level="NOTSET", format=FORMAT, datefmt="[%X]", handlers=[RichHandler()])
 
 logger = logging.getLogger(__name__)
 urllib.request.urlretrieve(

@@ -25,9 +25,7 @@ class RandomResizedCrop(transforms.RandomResizedCrop):
 
         target_area = area * torch.empty(1).uniform_(scale[0], scale[1]).item()
         log_ratio = torch.log(torch.tensor(ratio))
-        aspect_ratio = torch.exp(
-            torch.empty(1).uniform_(log_ratio[0], log_ratio[1])
-        ).item()
+        aspect_ratio = torch.exp(torch.empty(1).uniform_(log_ratio[0], log_ratio[1])).item()
 
         w = int(round(math.sqrt(target_area * aspect_ratio)))
         h = int(round(math.sqrt(target_area / aspect_ratio)))
