@@ -10,7 +10,7 @@ from research_app.utils import clone_repo, notebook_to_html
 from rich import print
 from rich.logging import RichHandler
 
-from fb_mae.demo import Demo
+from mae_poster.demo import ModelDemo
 
 FORMAT = "%(message)s"
 logging.basicConfig(level="NOTSET", format=FORMAT, datefmt="[%X]", handlers=[RichHandler()])
@@ -80,7 +80,7 @@ class ResearchApp(L.LightningFlow):
             )
 
         if launch_gradio:
-            self.model_demo = Demo()
+            self.model_demo = ModelDemo()
 
         if notebook_path:
             self.notebook_viewer = StaticNotebookViewer(notebook_path)

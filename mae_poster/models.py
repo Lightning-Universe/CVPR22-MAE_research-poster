@@ -15,7 +15,7 @@ import torch
 import torch.nn as nn
 from timm.models.vision_transformer import Block, PatchEmbed
 
-from fb_mae.util.pos_embed import get_2d_sincos_pos_embed
+from mae.util.pos_embed import get_2d_sincos_pos_embed
 
 
 class MaskedAutoencoderViT(nn.Module):
