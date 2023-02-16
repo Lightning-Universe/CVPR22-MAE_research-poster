@@ -9,7 +9,7 @@ from rich import print
 from rich.logging import RichHandler
 
 from research_app.components.jupyter_notebook import JupyterLab
-from research_app.components.model_demo import ModelDemo
+from research_app.demo.model import ModelDemo
 from research_app.utils import clone_repo, notebook_to_html
 
 FORMAT = "%(message)s"
@@ -134,19 +134,15 @@ class ResearchApp(L.LightningFlow):
 
 
 if __name__ == "__main__":
-    poster_dir = "resources"
-    paper = "https://arxiv.org/pdf/2111.06377v2.pdf"
-    github = "https://github.com/facebookresearch/mae"
-    tabs = ["Poster", "Notebook Viewer", "Paper", "Model Demo"]
 
     app = L.LightningApp(
         ResearchApp(
-            poster_dir=poster_dir,
-            paper=paper,
-            github=github,
+            poster_dir="resources",
+            paper="https://arxiv.org/pdf/2111.06377v2.pdf",
+            github="https://github.com/facebookresearch/mae",
             notebook_path="resources/mae_visualize.ipynb",
             launch_gradio=True,
-            tab_order=tabs,
+            tab_order=["Poster", "Notebook Viewer", "Paper", "Model Demo"],
             launch_jupyter_lab=False,  # don't launch for public app, can expose to security vulnerability
         )
     )
