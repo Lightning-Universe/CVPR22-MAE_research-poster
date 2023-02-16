@@ -9,7 +9,7 @@ from rich import print
 from rich.logging import RichHandler
 
 from research_app.components.jupyter_notebook import JupyterLab
-from research_app.demo.model import ModelDemo
+from fb_mae.demo import Demo
 from research_app.utils import clone_repo, notebook_to_html
 
 FORMAT = "%(message)s"
@@ -80,7 +80,7 @@ class ResearchApp(L.LightningFlow):
             )
 
         if launch_gradio:
-            self.model_demo = ModelDemo()
+            self.model_demo = Demo()
 
         if notebook_path:
             self.notebook_viewer = StaticNotebookViewer(notebook_path)
