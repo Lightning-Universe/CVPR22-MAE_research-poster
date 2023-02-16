@@ -2,18 +2,14 @@ import logging
 import os
 import urllib
 
+import gradio as gr
 import numpy as np
 import requests
 import torch
-from PIL import Image
-from rich.logging import RichHandler
-
-import gradio as gr
+from fb_mae import models
 from lightning.app.components.serve import ServeGradio
 from PIL import Image
 from rich.logging import RichHandler
-
-from fb_mae import models
 
 FORMAT = "%(message)s"
 logging.basicConfig(level="NOTSET", format=FORMAT, datefmt="[%X]", handlers=[RichHandler()])
