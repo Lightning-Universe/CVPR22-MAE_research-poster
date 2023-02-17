@@ -1,22 +1,35 @@
+import logging
 import os
 import urllib
 
+import gradio as gr
 import numpy as np
 import requests
 import torch
+from lightning.app.components.serve import ServeGradio
 from PIL import Image
 
-from fb_mae import models_mae
+from . import models
 
 # define the utils
 
 imagenet_mean = np.array([0.485, 0.456, 0.406])
 imagenet_std = np.array([0.229, 0.224, 0.225])
 
+logger = logging.getLogger(__name__)
+urllib.request.urlretrieve(
+    "https://user-images.githubusercontent.com/11435359/147738734-196fd92f-9260-48d5-ba7e-bf103d29364d.jpg",
+    "resources/fox.jpg",
+)  # fox, from ILSVRC2012_val_00046145
+urllib.request.urlretrieve(
+    "https://user-images.githubusercontent.com/11435359/147743081-0428eecf-89e5-4e07-8da5-a30fd73cc0ba.jpg",
+    "resources/cucumber.jpg",
+)  # cucumber, from ILSVRC2012_val_00047851
+
 
 def prepare_model(chkpt_dir, arch="mae_vit_large_patch16"):
     # build model
-    model = getattr(models_mae, arch)()
+    model = getattr(models, arch)()
     # load model
     checkpoint = torch.load(chkpt_dir, map_location="cpu")
     msg = model.load_state_dict(checkpoint["model"], strict=False)
@@ -107,6 +120,42 @@ class Demo:
         torch.manual_seed(2)
         print("MAE with pixel reconstruction:")
         return run_one_image(img, self.model_mae)
+
+
+class ModelDemo(ServeGradio):
+    """Serve model with Gradio UI.
+
+    You need to define i. `build_model` and ii. `predict` method and Lightning `ServeGradio` component will
+    automatically launch the Gradio interface.
+    """
+
+    inputs = gr.inputs.Image(type="pil")
+    outputs = [
+        gr.Image(label="original image"),
+        gr.Image(label="masked"),
+        gr.Image(label="reconstructed"),
+        gr.Image(label="reconstructed + visible"),
+    ]
+    examples = ["resources/fox.jpg", "resources/cucumber.jpg"]
+    enable_queue = True
+
+    def __init__(self):
+        super().__init__(parallel=True)
+
+    def build_model(self) -> Demo:
+        logger.info("loading model...")
+        model = Demo()
+        logger.info("built model!")
+        return model
+
+    def predict(self, image: Image.Image) -> Image.Image:
+        result = self.model.predict(image)
+        return (
+            result["original"],
+            result["masked"],
+            result["reconstructed"],
+            result["visible"],
+        )
 
 
 if __name__ == "__main__":
