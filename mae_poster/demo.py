@@ -6,13 +6,9 @@ import gradio as gr
 import numpy as np
 import requests
 import torch
-from fb_mae import models
+from . import models
 from lightning.app.components.serve import ServeGradio
 from PIL import Image
-from rich.logging import RichHandler
-
-FORMAT = "%(message)s"
-logging.basicConfig(level="NOTSET", format=FORMAT, datefmt="[%X]", handlers=[RichHandler()])
 
 # define the utils
 

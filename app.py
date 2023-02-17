@@ -7,13 +7,8 @@ from lightning.app.frontend import StaticWebFrontend
 from poster import Poster
 from research_app.components.jupyter_notebook import JupyterLab
 from research_app.utils import clone_repo, notebook_to_html
-from rich import print
-from rich.logging import RichHandler
 
 from mae_poster.demo import ModelDemo
-
-FORMAT = "%(message)s"
-logging.basicConfig(level="NOTSET", format=FORMAT, datefmt="[%X]", handlers=[RichHandler()])
 
 logger = logging.getLogger(__name__)
 
