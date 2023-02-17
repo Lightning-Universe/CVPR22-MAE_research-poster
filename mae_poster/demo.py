@@ -6,9 +6,10 @@ import gradio as gr
 import numpy as np
 import requests
 import torch
-from . import models
 from lightning.app.components.serve import ServeGradio
 from PIL import Image
+
+from . import models
 
 # define the utils
 
